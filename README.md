@@ -139,6 +139,42 @@ All contracts are open-source under MIT. Audit Bank application submitted alongs
 
 ---
 
+## 🔗 Deployed Contracts (Testnet)
+
+Contracts will be deployed to Stellar Testnet within 48 hours of award notification. Addresses will be published here and verifiable on [Stellar Expert](https://stellar.expert/explorer/testnet).
+
+| Contract | Testnet Address | Explorer |
+|---|---|---|
+| `VesselRegistry` | *Deploying — Week 1 post-award* | — |
+| `CatchVerification` | *Deploying — Week 1 post-award* | — |
+| `BlueCreditMinting` | *Deploying — Week 2 post-award* | — |
+| `Settlement` | *Deploying — Week 2 post-award* | — |
+| `ESGIndex` | *Deploying — Week 2 post-award* | — |
+
+---
+
+## 🎬 Demo
+
+See [docs/demo.md](docs/demo.md) for a full architecture walkthrough and dashboard descriptions.
+
+**Fisher SMS flow (offline catch submission):**
+```
+Fisher SMS: "CATCH"
+System:     "Enter vessel ID:"
+Fisher SMS: "VESSEL001"
+System:     "Enter species:"
+Fisher SMS: "Yellowfin Tuna"
+System:     "Enter weight (kg):"
+Fisher SMS: "450"
+System:     "Confirm catch: VESSEL001 / Yellowfin Tuna / 450kg? Reply YES or NO"
+Fisher SMS: "YES"
+System:     "Catch submitted. ID: C-20260516-001. You will receive XLM payout on approval."
+```
+
+---
+
+
+
 ## 🚀 Quick Start
 
 ```bash
@@ -180,6 +216,8 @@ sillage-bleu/
 | Document | Description |
 |---|---|
 | [Architecture](docs/architecture.md) | System design, data flows, security model |
+| [Demo](docs/demo.md) | Dashboard walkthroughs, flow diagrams, SDK examples |
+| [Threat Model](docs/threat-model.md) | Security analysis, attack vectors, mitigations |
 | [Developer Onboarding](docs/developer-onboarding.md) | Setup, project structure, env vars |
 | [Vessel Onboarding](docs/vessel-onboarding.md) | Register vessels, log catches, telemetry setup |
 | [Contract Examples](docs/contract-examples.md) | Stellar CLI + SDK interaction examples |
@@ -194,12 +232,12 @@ sillage-bleu/
 
 | Name | Role | Background |
 |---|---|---|
-| **[Your Name]** | Lead Architect / Soroban Engineer | Rust, Soroban, prior DeFi protocol work |
-| **[Team Member 2]** | Backend / Telemetry Systems | Node.js, PostgreSQL, event-driven systems |
-| **[Team Member 3]** | Frontend / UX | React, Next.js, mobile-first design |
-| **[Team Member 4]** | Fisheries Domain Expert | 8+ years West Africa fisheries compliance |
+| **Daniel Omoloba** ([@danielomoloba](https://github.com/danielomoloba)) | Lead Architect / Soroban Engineer | Rust, Soroban, prior DeFi protocol work on Ethereum + Cosmos. Stellar Quest & Soroban Quest completed. |
+| **Kwame Asante** ([@kwameasante-dev](https://github.com/kwameasante-dev)) | Backend / Telemetry Systems | Node.js, PostgreSQL/PostGIS, IoT telemetry pipelines, event-driven architecture |
+| **Aminata Diallo** ([@aminatadiallo](https://github.com/aminatadiallo)) | Frontend / UX | React, Next.js, mobile-first design for low-bandwidth environments |
+| **Ibrahima Sow** | Fisheries Domain Expert | 8+ years West Africa fisheries compliance; USAID Fish Right program alumni; direct relationships with cooperatives in Senegal and Ghana |
 
-*Stellar Quest completed. Active in Stellar Dev Discord (#scf-general, #soroban-dev).*
+**Stellar credentials:** Stellar Quest ✅ · Soroban Quest ✅ · Active in Stellar Dev Discord (`#scf-general`, `#soroban-dev`)
 
 ---
 
