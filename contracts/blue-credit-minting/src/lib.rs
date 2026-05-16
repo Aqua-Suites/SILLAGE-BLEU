@@ -15,7 +15,7 @@ pub enum DataKey {
 }
 
 #[contracterror]
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub enum Error {
     Unauthorized = 1,
     CreditExists = 2,

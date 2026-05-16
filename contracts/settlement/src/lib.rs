@@ -15,7 +15,7 @@ pub enum DataKey {
 }
 
 #[contracttype]
-#[derive(Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum PayoutStatus {
     Pending,
     Executed,
@@ -23,7 +23,7 @@ pub enum PayoutStatus {
 }
 
 #[contracttype]
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct PayoutRecord {
     pub payout_id: Bytes,
     pub fisher: Address,
@@ -35,7 +35,7 @@ pub struct PayoutRecord {
 }
 
 #[contracttype]
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct BatchPayoutItem {
     pub payout_id: Bytes,
     pub fisher: Address,
@@ -44,7 +44,7 @@ pub struct BatchPayoutItem {
 }
 
 #[contracterror]
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub enum Error {
     Unauthorized = 1,
     PayoutExists = 2,
