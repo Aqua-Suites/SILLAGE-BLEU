@@ -34,6 +34,13 @@ jobs:
       - name: Test contracts
         run: cargo test --manifest-path contracts/Cargo.toml
 
+      - name: Upload WASM artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: wasm-contracts
+          path: contracts/target/wasm32v1-none/release/*.wasm
+          retention-days: 1
+
   # ── Backend ──────────────────────────────────────────────────────
   backend:
     name: Backend
@@ -122,13 +129,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Rust + wasm32
-        uses: dtolnay/rust-toolchain@stable
+      - name: Download WASM artifacts
+        uses: actions/download-artifact@v4
         with:
-          targets: wasm32v1-none
+          name: wasm-contracts
+          path: contracts/target/wasm32v1-none/release
 
       - name: Install Stellar CLI
-        run: cargo install stellar-cli --locked
+        run: |
+          curl -fsSL https://github.com/stellar/stellar-cli/releases/download/v22.8.1/stellar-cli-v22.8.1-x86_64-unknown-linux-gnu.tar.gz \
+            | tar -xz -C /usr/local/bin stellar
+          stellar --version
 
       - name: Deploy contracts
         run: bash contracts/scripts/deploy_testnet.sh

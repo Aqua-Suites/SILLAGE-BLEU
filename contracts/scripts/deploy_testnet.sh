@@ -1,15 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONTRACTS_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
+REPO_ROOT="$(cd "${CONTRACTS_DIR}/.." && pwd)"
+
 NETWORK="${STELLAR_NETWORK:-testnet}"
 RPC_URL="${STELLAR_RPC_URL:-https://soroban-testnet.stellar.org}"
 PASSPHRASE="${STELLAR_NETWORK_PASSPHRASE:-Test SDF Network ; September 2015}"
 DEPLOYER_KEY="${DEPLOYER_SECRET_KEY:?DEPLOYER_SECRET_KEY required}"
 
-echo "==> Building contracts..."
-cargo build --manifest-path ../Cargo.toml --target wasm32-unknown-unknown --release
-
-WASM_DIR="../target/wasm32-unknown-unknown/release"
+# Build only if WASM artifacts are not already present (CI reuses artifacts from contracts job)
+WASM_DIR="${CONTRACTS_DIR}/target/wasm32v1-none/release"
+if [ ! -d "${WASM_DIR}" ]; then
+  echo "==> Building contracts..."
+  cargo build --manifest-path "${CONTRACTS_DIR}/Cargo.toml" --target wasm32v1-none --release
+fi
 
 deploy_contract() {
   local name=$1
@@ -37,8 +43,7 @@ echo "CONTRACT_BLUE_CREDIT_MINTING=${BLUE_CREDIT_MINTING}"
 echo "CONTRACT_SETTLEMENT=${SETTLEMENT}"
 echo "CONTRACT_ESG_INDEX=${ESG_INDEX}"
 
-# Write to .env.contracts
-cat > ../../.env.contracts <<EOF
+cat > "${REPO_ROOT}/.env.contracts" <<EOF
 CONTRACT_VESSEL_REGISTRY=${VESSEL_REGISTRY}
 CONTRACT_CATCH_VERIFICATION=${CATCH_VERIFICATION}
 CONTRACT_BLUE_CREDIT_MINTING=${BLUE_CREDIT_MINTING}
