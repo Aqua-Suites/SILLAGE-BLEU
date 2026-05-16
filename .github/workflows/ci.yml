@@ -137,7 +137,7 @@ jobs:
 
       - name: Install Stellar CLI
         run: |
-          curl -fsSL https://github.com/stellar/stellar-cli/releases/download/v22.8.1/stellar-cli-v22.8.1-x86_64-unknown-linux-gnu.tar.gz \
+          curl -fsSL https://github.com/stellar/stellar-cli/releases/download/v26.0.0/stellar-cli-26.0.0-x86_64-unknown-linux-gnu.tar.gz \
             | tar -xz -C /usr/local/bin stellar
           stellar --version
 
