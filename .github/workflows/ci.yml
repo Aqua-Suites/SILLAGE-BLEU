@@ -34,12 +34,7 @@ jobs:
       - name: Test contracts
         run: cargo test --manifest-path contracts/Cargo.toml
 
-      - name: Upload WASM artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: wasm-contracts
-          path: contracts/target/wasm32v1-none/release/*.wasm
-          retention-days: 1
+
 
   # ── Backend ──────────────────────────────────────────────────────
   backend:
@@ -119,32 +114,4 @@ jobs:
           NEXT_PUBLIC_API_URL: http://localhost:3001
           NEXT_PUBLIC_STELLAR_NETWORK: testnet
 
-  # ── Deploy gate (main only) ───────────────────────────────────────
-  deploy-testnet:
-    name: Deploy to Testnet
-    needs: [contracts, backend, sdk, frontend]
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    environment: testnet
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Download WASM artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: wasm-contracts
-          path: contracts/target/wasm32v1-none/release
-
-      - name: Install Stellar CLI
-        run: |
-          curl -fsSL https://github.com/stellar/stellar-cli/releases/download/v26.0.0/stellar-cli-26.0.0-x86_64-unknown-linux-gnu.tar.gz \
-            | tar -xz -C /usr/local/bin stellar
-          stellar --version
-
-      - name: Deploy contracts
-        run: bash contracts/scripts/deploy_testnet.sh
-        env:
-          STELLAR_NETWORK: testnet
-          STELLAR_RPC_URL: https://soroban-testnet.stellar.org
-          STELLAR_NETWORK_PASSPHRASE: "Test SDF Network ; September 2015"
-          DEPLOYER_SECRET_KEY: ${{ secrets.DEPLOYER_SECRET_KEY }}
