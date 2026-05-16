@@ -1,7 +1,7 @@
 'use client';
 import { useState, useCallback } from 'react';
 import {
-  getPublicKey,
+  getAddress,
   isConnected,
   signTransaction,
 } from '@stellar/freighter-api';
@@ -15,10 +15,11 @@ export function useWallet() {
   const connect = useCallback(async () => {
     setConnecting(true);
     try {
-      const connected = await isConnected();
+      const { isConnected: connected } = await isConnected();
       if (!connected) throw new Error('Freighter not installed');
 
-      const pubkey = await getPublicKey();
+      const { address: pubkey, error: addrError } = await getAddress();
+      if (addrError || !pubkey) throw new Error(addrError ?? 'Could not get address');
 
       // Get challenge
       const { challenge, token: challengeToken } = await api.get<{
@@ -26,17 +27,17 @@ export function useWallet() {
         token: string;
       }>(`/api/auth/challenge/${pubkey}`);
 
-      // Sign challenge with Freighter
-      const { signedXDR } = await signTransaction(challenge, {
+      const { signedTxXdr, error: signError } = await signTransaction(challenge, {
         networkPassphrase: process.env.NEXT_PUBLIC_STELLAR_NETWORK === 'mainnet'
           ? 'Public Global Stellar Network ; September 2015'
           : 'Test SDF Network ; September 2015',
       });
+      if (signError) throw new Error(String(signError));
 
       // Verify and get session token
       const { token, role: userRole } = await api.post<{ token: string; role: string }>(
         '/api/auth/verify',
-        { challengeToken, signature: signedXDR, address: pubkey },
+        { challengeToken, signature: signedTxXdr, address: pubkey },
       );
 
       localStorage.setItem('sb_token', token);
