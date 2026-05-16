@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { CreditsClient } from '../src/credits';
-import { TelemetryPingSchema } from '../src/types';
+import { CreditsClient } from '../credits';
+import { TelemetryPingSchema } from '../types';
 
 describe('CreditsClient.estimateCredits', () => {
   const client = new CreditsClient({ apiUrl: 'http://localhost:3001' });

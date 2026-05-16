@@ -192,7 +192,7 @@ mod tests {
     use super::*;
     use soroban_sdk::{testutils::Address as _, Env};
 
-    fn setup() -> (Env, Address, Address, Address) {
+    fn setup() -> (Env, Address, Address, Address, Address) {
         let env = Env::default();
         env.mock_all_auths();
         let contract_id = env.register_contract(None, VesselRegistryContract);
@@ -205,12 +205,12 @@ mod tests {
         client.set_role(&admin, &owner, &Role::VesselOwner);
         client.set_role(&admin, &fisher, &Role::Fisher);
 
-        (env, contract_id, owner, fisher)
+        (env, contract_id, admin, owner, fisher)
     }
 
     #[test]
     fn test_register_and_get_vessel() {
-        let (env, contract_id, owner, fisher) = setup();
+        let (env, contract_id, _admin, owner, fisher) = setup();
         let client = VesselRegistryContractClient::new(&env, &contract_id);
 
         let vessel_id = Bytes::from_slice(&env, b"VESSEL001");
@@ -232,9 +232,8 @@ mod tests {
 
     #[test]
     fn test_compliance_update_suspends_low_score() {
-        let (env, contract_id, owner, fisher) = setup();
+        let (env, contract_id, admin, owner, fisher) = setup();
         let client = VesselRegistryContractClient::new(&env, &contract_id);
-        let admin = Address::generate(&env);
 
         let vessel_id = Bytes::from_slice(&env, b"VESSEL002");
         client.register_vessel(
@@ -245,7 +244,6 @@ mod tests {
         );
 
         let verifier = Address::generate(&env);
-        // Need to set verifier role via admin — re-init for this test
         client.set_role(&admin, &verifier, &Role::Verifier);
         client.update_compliance(&verifier, &vessel_id, &10);
 
@@ -256,7 +254,7 @@ mod tests {
     #[test]
     #[should_panic]
     fn test_duplicate_vessel_rejected() {
-        let (env, contract_id, owner, fisher) = setup();
+        let (env, contract_id, _admin, owner, fisher) = setup();
         let client = VesselRegistryContractClient::new(&env, &contract_id);
         let vessel_id = Bytes::from_slice(&env, b"VESSEL003");
 

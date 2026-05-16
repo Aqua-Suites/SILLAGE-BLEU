@@ -60,7 +60,6 @@ jobs:
           cache: npm
 
       - run: npm ci
-        working-directory: backend/api-gateway
 
       - run: npm run lint
         working-directory: backend/api-gateway
@@ -84,7 +83,6 @@ jobs:
           cache: npm
 
       - run: npm ci
-        working-directory: sdk
 
       - run: npm test
         working-directory: sdk
@@ -104,7 +102,6 @@ jobs:
           cache: npm
 
       - run: npm ci
-        working-directory: frontend/web
 
       - run: npm run lint
         working-directory: frontend/web
