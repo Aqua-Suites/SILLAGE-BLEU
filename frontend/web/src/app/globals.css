@@ -1,0 +1,38 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ocean: #0077b6;
+  --ocean-light: #00b4d8;
+  --sand: #f4a261;
+  --green: #2d6a4f;
+  --bg: #f8fafc;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --radius: 8px;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Mobile-first layout */
+.container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+.card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; }
+.btn { display: inline-flex; align-items: center; gap: .5rem; padding: .5rem 1rem; border-radius: var(--radius); border: none; cursor: pointer; font-size: 1rem; font-weight: 600; }
+.btn-primary { background: var(--ocean); color: #fff; }
+.btn-secondary { background: var(--border); color: var(--text); }
+.badge { display: inline-block; padding: .2rem .6rem; border-radius: 999px; font-size: .75rem; font-weight: 600; }
+.badge-green { background: #d1fae5; color: var(--green); }
+.badge-yellow { background: #fef3c7; color: #92400e; }
+.badge-red { background: #fee2e2; color: #991b1b; }
+.badge-blue { background: #dbeafe; color: #1e40af; }
+
+@media (min-width: 768px) {
+  .container { padding: 0 2rem; }
+  .card { padding: 1.5rem; }
+}

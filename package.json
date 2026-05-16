@@ -1,0 +1,33 @@
+{
+  "name": "sillage-bleu",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Blue Economy Verification & Ocean Carbon Credit Infrastructure",
+  "workspaces": [
+    "frontend/*",
+    "backend/*",
+    "sdk"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
+    "contracts:build": "cd contracts && cargo build --target wasm32-unknown-unknown --release",
+    "contracts:test": "cd contracts && cargo test",
+    "contracts:deploy:testnet": "cd contracts && ./scripts/deploy_testnet.sh",
+    "db:migrate": "cd backend/api-gateway && npm run db:migrate",
+    "infra:up": "docker-compose -f infra/docker-compose.yml up -d",
+    "infra:down": "docker-compose -f infra/docker-compose.yml down"
+  },
+  "devDependencies": {
+    "turbo": "2.3.3",
+    "prettier": "3.4.2",
+    "typescript": "5.7.3"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}

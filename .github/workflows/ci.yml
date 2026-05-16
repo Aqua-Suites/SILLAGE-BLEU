@@ -1,0 +1,142 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── Smart Contracts ──────────────────────────────────────────────
+  contracts:
+    name: Soroban Contracts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust + wasm32 target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            contracts/target
+          key: cargo-${{ hashFiles('contracts/Cargo.toml') }}
+
+      - name: Build contracts
+        run: cargo build --manifest-path contracts/Cargo.toml --target wasm32-unknown-unknown --release
+
+      - name: Test contracts
+        run: cargo test --manifest-path contracts/Cargo.toml
+
+  # ── Backend ──────────────────────────────────────────────────────
+  backend:
+    name: Backend
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: sillage_test
+          POSTGRES_USER: sillage
+          POSTGRES_PASSWORD: sillage
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 5s --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+        options: --health-cmd "redis-cli ping" --health-interval 5s --health-retries 10
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+        working-directory: backend/api-gateway
+
+      - run: npm run lint
+        working-directory: backend/api-gateway
+
+      - run: npm test
+        working-directory: backend/api-gateway
+        env:
+          DATABASE_URL: postgresql://sillage:sillage@localhost:5432/sillage_test
+          REDIS_URL: redis://localhost:6379
+          JWT_SECRET: test-secret
+
+  # ── SDK ──────────────────────────────────────────────────────────
+  sdk:
+    name: SDK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+        working-directory: sdk
+
+      - run: npm test
+        working-directory: sdk
+
+      - run: npm run build
+        working-directory: sdk
+
+  # ── Frontend ─────────────────────────────────────────────────────
+  frontend:
+    name: Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+        working-directory: frontend/web
+
+      - run: npm run lint
+        working-directory: frontend/web
+
+      - run: npm run build
+        working-directory: frontend/web
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:3001
+          NEXT_PUBLIC_STELLAR_NETWORK: testnet
+
+  # ── Deploy gate (main only) ───────────────────────────────────────
+  deploy-testnet:
+    name: Deploy to Testnet
+    needs: [contracts, backend, sdk, frontend]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment: testnet
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust + wasm32
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Install Stellar CLI
+        run: cargo install stellar-cli --locked
+
+      - name: Deploy contracts
+        run: bash contracts/scripts/deploy_testnet.sh
+        env:
+          STELLAR_NETWORK: testnet
+          STELLAR_RPC_URL: https://soroban-testnet.stellar.org
+          STELLAR_NETWORK_PASSPHRASE: "Test SDF Network ; September 2015"
+          DEPLOYER_SECRET_KEY: ${{ secrets.DEPLOYER_SECRET_KEY }}

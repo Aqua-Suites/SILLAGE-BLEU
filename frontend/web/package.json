@@ -1,0 +1,29 @@
+{
+  "name": "@sillage-bleu/frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@stellar/freighter-api": "4.0.0",
+    "@stellar/stellar-sdk": "12.3.0",
+    "@tanstack/react-query": "5.67.2",
+    "next": "15.2.3",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "recharts": "2.15.1",
+    "zustand": "5.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "22.13.10",
+    "@types/react": "19.0.10",
+    "@types/react-dom": "19.0.4",
+    "typescript": "5.7.3",
+    "vitest": "3.0.9"
+  }
+}
