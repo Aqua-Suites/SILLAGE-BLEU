@@ -3,7 +3,7 @@ use soroban_sdk::{contracttype, Address, Bytes, String};
 
 /// Roles in the Sillage Bleu system
 #[contracttype]
-#[derive(Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Role {
     Fisher,
     VesselOwner,
@@ -14,7 +14,7 @@ pub enum Role {
 
 /// Vessel registration status
 #[contracttype]
-#[derive(Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum VesselStatus {
     Pending,
     Active,
@@ -24,7 +24,7 @@ pub enum VesselStatus {
 
 /// Catch verification outcome
 #[contracttype]
-#[derive(Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum VerificationStatus {
     Pending,
     Approved,
@@ -34,7 +34,7 @@ pub enum VerificationStatus {
 
 /// Registered vessel record
 #[contracttype]
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct Vessel {
     pub vessel_id: Bytes,
     pub owner: Address,
@@ -49,7 +49,7 @@ pub struct Vessel {
 
 /// A single catch telemetry event
 #[contracttype]
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct CatchEvent {
     pub catch_id: Bytes,
     pub vessel_id: Bytes,
@@ -65,7 +65,7 @@ pub struct CatchEvent {
 
 /// Blue carbon credit record
 #[contracttype]
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct BlueCredit {
     pub credit_id: Bytes,
     pub vessel_id: Bytes,
@@ -79,7 +79,7 @@ pub struct BlueCredit {
 
 /// ESG impact snapshot
 #[contracttype]
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct EsgSnapshot {
     pub period_start: u64,
     pub period_end: u64,
