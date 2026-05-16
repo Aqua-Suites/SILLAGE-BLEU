@@ -1,6 +1,6 @@
 #![no_std]
 use soroban_sdk::{
-    contract, contractimpl, contracttype, log, panic_with_error, symbol_short,
+    contract, contractimpl, contracttype, contracterror, log, panic_with_error, symbol_short,
     Address, Bytes, Env, String,
 };
 use shared::{Role, Vessel, VesselStatus};
@@ -13,19 +13,13 @@ pub enum DataKey {
     Admin,
 }
 
-#[contracttype]
+#[contracterror]
 #[derive(Clone)]
 pub enum Error {
     Unauthorized = 1,
     VesselExists = 2,
     VesselNotFound = 3,
     InvalidInput = 4,
-}
-
-impl soroban_sdk::contracterror::ContractError for Error {
-    fn as_u32(&self) -> u32 {
-        self.clone() as u32
-    }
 }
 
 #[contract]

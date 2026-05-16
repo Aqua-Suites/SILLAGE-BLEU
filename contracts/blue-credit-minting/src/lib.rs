@@ -1,6 +1,6 @@
 #![no_std]
 use soroban_sdk::{
-    contract, contractimpl, contracttype, panic_with_error, symbol_short,
+    contract, contractimpl, contracttype, contracterror, panic_with_error, symbol_short,
     Address, Bytes, Env,
 };
 use shared::{BlueCredit, Role};
@@ -14,19 +14,13 @@ pub enum DataKey {
     Admin,
 }
 
-#[contracttype]
+#[contracterror]
 #[derive(Clone)]
 pub enum Error {
     Unauthorized = 1,
     CreditExists = 2,
     CreditNotFound = 3,
     AlreadyRetired = 4,
-}
-
-impl soroban_sdk::contracterror::ContractError for Error {
-    fn as_u32(&self) -> u32 {
-        self.clone() as u32
-    }
 }
 
 /// Credit issuance: 1 credit per 100 kg of verified catch (micro-credits)

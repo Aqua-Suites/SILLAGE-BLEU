@@ -1,6 +1,6 @@
 #![no_std]
 use soroban_sdk::{
-    contract, contractimpl, contracttype, panic_with_error, symbol_short,
+    contract, contractimpl, contracttype, contracterror, panic_with_error, symbol_short,
     Address, Bytes, Env, String,
 };
 use shared::{CatchEvent, Role, VerificationStatus};
@@ -17,7 +17,7 @@ pub enum DataKey {
     DuplicateGuard(Bytes, u64),
 }
 
-#[contracttype]
+#[contracterror]
 #[derive(Clone)]
 pub enum Error {
     Unauthorized = 1,
@@ -26,12 +26,6 @@ pub enum Error {
     DuplicateCatch = 4,
     InvalidWeight = 5,
     SuspiciousGps = 6,
-}
-
-impl soroban_sdk::contracterror::ContractError for Error {
-    fn as_u32(&self) -> u32 {
-        self.clone() as u32
-    }
 }
 
 /// Max weight per single catch event (10 000 kg)

@@ -1,6 +1,6 @@
 #![no_std]
 use soroban_sdk::{
-    contract, contractimpl, contracttype, panic_with_error, symbol_short,
+    contract, contractimpl, contracttype, contracterror, panic_with_error, symbol_short,
     token, Address, Bytes, Env, Vec,
 };
 use shared::Role;
@@ -43,7 +43,7 @@ pub struct BatchPayoutItem {
     pub catch_id: Bytes,
 }
 
-#[contracttype]
+#[contracterror]
 #[derive(Clone)]
 pub enum Error {
     Unauthorized = 1,
@@ -51,12 +51,6 @@ pub enum Error {
     PayoutNotFound = 3,
     AlreadyExecuted = 4,
     InsufficientFunds = 5,
-}
-
-impl soroban_sdk::contracterror::ContractError for Error {
-    fn as_u32(&self) -> u32 {
-        self.clone() as u32
-    }
 }
 
 #[contract]
