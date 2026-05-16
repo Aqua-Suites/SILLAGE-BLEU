@@ -1,3 +1,4 @@
+#![no_std]
 use soroban_sdk::{contracttype, Address, Bytes, String};
 
 /// Roles in the Sillage Bleu system
